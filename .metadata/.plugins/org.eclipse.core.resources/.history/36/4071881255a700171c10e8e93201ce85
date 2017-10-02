@@ -1,0 +1,110 @@
+
+
+import java.util.*;
+
+public class AlphaBetaPlayer extends CheckerPlayer implements CheckerBoardConstants {
+
+	public AlphaBetaPlayer(String name){
+		super(name);
+	}
+
+	public void calculateMove(int[][] bs, int whosTurn){
+
+		// your code should go here// indicate that a move has not yet been chosen.
+		
+		/*chosenMove = null;
+		Vector possibleMoves = Utils.getAllPossibleMoves(bs, whosTurn);
+		if(possibleMoves.size()!=0) {
+			int rand = (int)(Math.random()*possibleMoves.size());
+			chosenMove = (Move)possibleMoves.elementAt(rand);
+		}*/
+		Move move = null;
+		chosenMove = null;
+		Stack executeMove = null;
+		int max = 0, min = 100;
+		int score = 0;
+		Move finalMove = null;
+		Vector possibleMoves = Utils.getAllPossibleMoves(bs, whosTurn);
+		int size = possibleMoves.size();
+		
+		if(whosTurn==1) { 		// RED_PLAYER / MAX
+			if(size != 0) {
+				for(int i=0; i<size; i++) {
+					move = (Move)possibleMoves.elementAt(i);
+					executeMove = Utils.executeMove(whosTurn, move, bs);
+					score = Utils.scoreCheckerBoard(bs, whosTurn);
+					System.out.println(score);
+					if(score > max) {
+						max = score;
+						finalMove = move;
+					}
+				}
+			}
+		} else { 				// BLACK_PLAYER / MIN
+			if(size != 0) {
+				for(int i=0; i<size; i++) {
+					move = (Move)possibleMoves.elementAt(i);
+					executeMove = Utils.executeMove(whosTurn, move, bs);
+					score = Utils.scoreCheckerBoard(bs, whosTurn);
+					System.out.print(score+"  ");
+					if(score < min) {
+						min = score;
+						finalMove = move;
+					}
+				}
+				System.out.println();
+			}
+		}
+		if(whosTurn==1) System.out.println("max -------------"+max);
+		else System.out.println("min -------------"+min);
+		chosenMove = finalMove;
+
+	}
+	
+	private int AlphaBeta(int depth, int alpha, int beta, int[][] bs, int whosTurn){
+		Vector child = Utils.getAllPossibleMoves(bs, whosTurn);
+		int size = child.size();
+		Move move = null;
+		chosenMove = null;
+		Stack executeMove = null;
+		int max = 0, min = 100;
+		int score = 0, compare = 0;
+		Move finalMove = null;
+		
+		if(depth == 0){
+			
+		}
+		if(whosTurn==1){ //alpha or red or whatever
+			if(size != 0) {
+				for(int i=0; i<size; i++) { // for each child of node
+					//possibleMoves.elementAt(i)
+					//v := max(v, alphabeta(child, depth – 1, , ,maximizing)
+					move = (Move)child.elementAt(i); //get move
+					score = Utils.scoreCheckerBoard(bs, whosTurn); //get score
+					compare = max(score, AlphaBeta(depth, alpha, beta,..., whosTurn));
+					
+					// := max(, v)
+					alpha = max(alpha,compare);
+					score = Utils.scoreCheckerBoard(bs, whosTurn);
+					if(beta<= alpha) break;
+				}
+				return compare;
+			}
+		}
+		else{ //beta or black or whatever
+			for(int i=0; i<size; i++) { // for each child of node
+				//possibleMoves.elementAt(i)
+				//v := max(v, alphabeta(child, depth – 1, , ,
+				move = (Move)min(move,AlphaBeta(depth, alpha, beta, child, whosTurn));
+				// := max(, v)
+				alpha = min(beta,move);
+				score = Utils.scoreCheckerBoard(bs, whosTurn);
+				System.out.println(score);
+				if(beta<= alpha) break;
+			}
+			return compare;
+		}
+		return 0;
+	}
+
+}
